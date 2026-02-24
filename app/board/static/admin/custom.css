@@ -1,0 +1,20 @@
+/* Change header background */
+#header {
+    background-color: #111 !important;
+}
+
+/* Change top title text */
+#site-name a {
+    color: #00ffcc !important;
+    font-weight: bold;
+}
+
+/* Change sidebar background */
+#nav-sidebar {
+    background-color: #1c1c1c !important;
+}
+
+/* Change main background */
+body {
+    background-color: #0f1115 !important;
+}

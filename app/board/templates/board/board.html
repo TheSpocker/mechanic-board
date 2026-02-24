@@ -1,0 +1,51 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" href="{% static 'board/style.css' %}">
+  <meta charset="utf-8">
+  <title>Status Board</title>
+  <meta http-equiv="refresh" content="15">
+  <style>
+
+  </style>
+</head>
+<body>
+<div class="header">
+  <img src="{% static 'board/img/logo.png' %}" alt="Tyson Auto Garage Logo" class="logo">
+  <h1>Tyson Auto Garage — Status Board</h1>
+  <div class="hint">Auto-refreshes every 15 seconds.</div>
+</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Vehicle</th>
+        <th>Plate</th>
+        <th>Customer</th>
+        <th>Complaint</th>
+        <th>Last Update</th>
+        <th>Promised Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for wo in workorders %}
+      <tr class="row">
+        <td class="status">{{ wo.get_status_display }}</td>
+        <td>{{ wo.vehicle }}</td>
+        <td>{{ wo.plate }}</td>
+        <td>{{ wo.customer }}</td>
+        <td>{{ wo.complaint }}</td>
+        <td>{{ wo.updated_at|date:"Y-m-d" }}</td>
+        <td>{{ wo.promised_date|date:"Y-m-d" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">No active work orders.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>

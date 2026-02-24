@@ -1,0 +1,55 @@
+
+<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" href="{% static 'board/style.css' %}">
+  <meta charset="utf-8">
+  <title>Status Board</title>
+  <meta http-equiv="refresh" content="15">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 16px; background: #0f1115; color: #e6e6e6; }
+    h1 { margin: 0 0 12px; font-size: 28px; }
+    .hint { opacity: 0.7; margin-bottom: 16px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid #2a2f3a; font-size: 18px; }
+    th { text-align: left; opacity: 0.85; }
+    .status { font-weight: 700; white-space: nowrap; }
+    .row:hover { background: #151923; }
+  </style>
+</head>
+<body>
+  <h1>Tyson Auto Garage — Status Board</h1>
+  <div class="hint">Auto-refreshes every 15 seconds.</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Vehicle</th>
+        <th>Plate</th>
+        <th>Customer</th>
+        <th>Complaint</th>
+        <th>Last Update</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for wo in workorders %}
+      <tr class="row">
+        <td class="status">{{ wo.get_status_display }}</td>
+        <td>{{ wo.vehicle }}</td>
+        <td>{{ wo.plate }}</td>
+        <td>{{ wo.customer }}</td>
+        <td>{{ wo.complaint }}</td>
+        <td>{{ wo.updated_at|date:"Y-m-d" }}</td>
+        <td>{{ wo.promised_date|date:"Y-m-d" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">No active work orders.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="logo-container">
+   <img src="{% static 'board/img/TysonGarageLogo.png' %}" alt="Tyson Auto Garage Logo" style="height:80px;">
+</div>
+</body>
+</html>

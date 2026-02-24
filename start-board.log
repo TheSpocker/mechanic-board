@@ -1,0 +1,51 @@
+===== Mon Feb 23 11:02:50 AM CET 2026 =====
+[1] podman compose up -d
+[4m>>>> Executing external compose provider "/home/Spocker/.local/bin/podman-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0mmechanic-board_db_1
+mechanic-board_web_1
+[2] Waiting for database...
+DB is ready.
+[3] Applying migrations...
+[4m>>>> Executing external compose provider "/home/Spocker/.local/bin/podman-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0mOperations to perform:
+  Apply all migrations: admin, auth, board, contenttypes, sessions
+Running migrations:
+  No migrations to apply.
+[4] Launching Chrome...
+[0223/110252.510452:WARNING:chrome/app/chrome_main_linux.cc:83] Read channel stable from /app/extra/CHROME_VERSION_EXTRA
+[0223/110252.602336:WARNING:chrome/app/chrome_main_linux.cc:83] Read channel stable from /app/extra/CHROME_VERSION_EXTRA
+Opening in existing browser session.
+Done.
+===== Mon Feb 23 11:06:14 AM CET 2026 =====
+[1] podman compose up -d
+[4m>>>> Executing external compose provider "/home/Spocker/.local/bin/podman-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0mmechanic-board_db_1
+mechanic-board_web_1
+[2] Waiting for database...
+DB is ready.
+[3] Applying migrations...
+[4m>>>> Executing external compose provider "/home/Spocker/.local/bin/podman-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0mOperations to perform:
+  Apply all migrations: admin, auth, board, contenttypes, sessions
+Running migrations:
+  No migrations to apply.
+[4] Launching Chrome...
+[0223/110616.405648:WARNING:chrome/app/chrome_main_linux.cc:83] Read channel stable from /app/extra/CHROME_VERSION_EXTRA
+[0223/110616.501489:WARNING:chrome/app/chrome_main_linux.cc:83] Read channel stable from /app/extra/CHROME_VERSION_EXTRA
+[2:2:0223/110616.593408:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.kde.KWallet.isEnabled: object_path= /modules/kwalletd6: org.freedesktop.DBus.Error.ServiceUnknown: org.freedesktop.DBus.Error.ServiceUnknown
+[2:2:0223/110616.593421:ERROR:components/os_crypt/sync/kwallet_dbus.cc:113] Error contacting kwalletd6 (isEnabled)
+[2:2:0223/110616.593532:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.kde.KLauncher.start_service_by_desktop_name: object_path= /KLauncher: org.freedesktop.DBus.Error.ServiceUnknown: org.freedesktop.DBus.Error.ServiceUnknown
+[2:2:0223/110616.593535:ERROR:components/os_crypt/sync/kwallet_dbus.cc:82] Error contacting klauncher to start kwalletd6
+[2:2:0223/110616.593624:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.kde.KWallet.close: object_path= /modules/kwalletd6: org.freedesktop.DBus.Error.ServiceUnknown: org.freedesktop.DBus.Error.ServiceUnknown
+[2:2:0223/110616.593626:ERROR:components/os_crypt/sync/kwallet_dbus.cc:408] Error contacting kwalletd6 (close)
+[63:63:0223/110616.654583:ERROR:ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc:251] '--ozone-platform=wayland' is not compatible with Vulkan. Consider switching to '--ozone-platform=x11' or disabling Vulkan
+LaunchProcess: failed to execvp:
+xdg-settings
+[2:2:0223/110621.180331:ERROR:ui/events/platform/wayland/wayland_event_watcher.cc:47] libwayland: warning: queue 0x143c00005400 destroyed while proxies still attached:
+
+[2:2:0223/110621.180381:ERROR:ui/events/platform/wayland/wayland_event_watcher.cc:47] libwayland:   zwp_tablet_pad_v2#4278190081 still attached
+
