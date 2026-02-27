@@ -4,7 +4,12 @@
 {% block title %}Tyson Auto Garage | Admin{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">Tyson Auto Garage Admin Page</a></h1>
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}">
+    <img src="{% static 'board/img/logo.png' %}" alt="Tyson Auto Garage" class="admin-logo">
+    <span>Tyson Auto Garage Admin Page</span>
+  </a>
+</h1>
 {% endblock %}
 
 {% block extrastyle %}

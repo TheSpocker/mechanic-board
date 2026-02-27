@@ -56,7 +56,8 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # Keep admin overrides in board/templates available before app template lookup.
+        'DIRS': [BASE_DIR / 'board' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

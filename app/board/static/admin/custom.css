@@ -1,20 +1,285 @@
-/* Change header background */
-#header {
-    background-color: #111 !important;
+:root {
+  --bg: #08192e;
+  --surface: #1212128d;
+  --surface-alt: #cf1111;
+  --text: #ffffff;
+  --muted: #5b677a;
+  --line: #0000003b;
+  --brand: #0f6f8c;
+  --brand-strong: #0b5970;
+  --accent: #c9812f;
+  --ok: #0f766e;
+  --warn: #b45309;
+  --danger: #b42318;
+  --radius: 12px;
+  --shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
 }
 
-/* Change top title text */
-#site-name a {
-    color: #00ffcc !important;
-    font-weight: bold;
+* {
+  box-sizing: border-box;
 }
 
-/* Change sidebar background */
-#nav-sidebar {
-    background-color: #1c1c1c !important;
-}
-
-/* Change main background */
+html,
 body {
-    background-color: #0f1115 !important;
+  margin: 0;
+  background:
+    radial-gradient(circle at 0% 0%, #dceff4 0%, transparent 28%),
+    radial-gradient(circle at 100% 0%, #f8ead6 0%, transparent 24%),
+    var(--bg) !important;
+  color: var(--text) !important;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif !important;
+}
+
+a:link,
+a:visited {
+  color: var(--brand);
+}
+
+a:hover {
+  color: var(--brand-strong);
+}
+
+#container {
+  background: transparent !important;
+}
+
+#header {
+  background: linear-gradient(90deg, #0f6f8c 0%, #125f86 55%, #194f78 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 16px rgba(9, 35, 53, 0.25);
+}
+
+#header a:link,
+#header a:visited,
+#user-tools,
+#user-tools a:link,
+#user-tools a:visited {
+  color: #eff8ff !important;
+}
+
+#site-name a:link,
+#site-name a:visited {
+  color: #fff !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.admin-logo {
+  height: 30px;
+  width: auto;
+  display: block;
+}
+
+div.breadcrumbs {
+  background: #eaf2f8 !important;
+  color: var(--muted) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+div.breadcrumbs a {
+  color: #245f7c !important;
+}
+
+#content {
+  color: var(--text) !important;
+}
+
+#content h1,
+#content-main > h1 {
+  color: hsl(0, 0%, 100%) !important;
+  letter-spacing: 0.01em;
+}
+
+#content-main,
+#changelist,
+.dashboard #content {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+#nav-sidebar {
+  background: #2a2b2c !important;
+  border-right: 1px solid var(--line) !important;
+}
+
+#nav-sidebar .current-model {
+  background: #d8eaf7 !important;
+}
+
+.module {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+  background: linear-gradient(180deg, #f40000 0%, #000000 100%) !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--line);
+  font-weight: 700;
+}
+
+table#result_list {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+#result_list thead th {
+  background: #1372d0 !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+#result_list tbody tr:nth-child(odd) {
+  background: #3b3a3a4c !important;
+}
+
+#result_list tbody tr:nth-child(even) {
+  background: #f5f9fe !important;
+}
+
+#result_list tbody tr:hover {
+  background: #e9f3fc !important;
+}
+
+#result_list td,
+#result_list th,
+.module table td,
+.module table th {
+  border-color: var(--line) !important;
+  color: #000 !important;
+}
+
+#changelist-filter {
+  background: #121212 !important;
+  border-left: 1px solid var(--line) !important;
+  border-radius: 0 10px 10px 0;
+}
+
+#changelist-filter h2 {
+  background: #e8f1fa !important;
+  color: var(--text) !important;
+}
+
+input,
+textarea,
+select,
+.vTextField {
+  background: #fff !important;
+  color: var(--text) !important;
+  border: 1px solid #c4d0dd !important;
+  border-radius: 8px !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 0;
+  border-color: #4f87b5 !important;
+  box-shadow: 0 0 0 3px rgba(79, 135, 181, 0.18);
+}
+
+.button,
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+a.button {
+  background: linear-gradient(180deg, #157ca0 0%, #0f6f8c 100%) !important;
+  border: 1px solid #0e6480 !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 3px 8px rgba(13, 71, 96, 0.25);
+}
+
+.button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+.submit-row input:hover,
+a.button:hover {
+  background: linear-gradient(180deg, #1a8ab1 0%, #116f8c 100%) !important;
+}
+
+.deletelink,
+a.deletelink {
+  background: #cc4b41 !important;
+  border-color: #a83c35 !important;
+}
+
+.messagelist li {
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.messagelist .success {
+  background: #e8f7f4 !important;
+  border-color: #a7ddd2 !important;
+  color: #0f5e57 !important;
+}
+
+.messagelist .warning {
+  background: #fff3e5 !important;
+  border-color: #f0cca0 !important;
+  color: #8a4b08 !important;
+}
+
+.messagelist .error {
+  background: #fdecea !important;
+  border-color: #f3bbb7 !important;
+  color: #912018 !important;
+}
+
+/* Remove sidebar +Add links and move Add action to search row */
+#nav-sidebar a.addlink,
+#nav-sidebar td.addlink,
+#nav-sidebar .addlink {
+  display: none !important;
+}
+
+.search-add-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  background: #001e3b !important;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.search-add-row #toolbar {
+  flex: 1 1 auto;
+  width: 100%;
+  margin-bottom: 0;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+.search-add-row #changelist-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 0;
+}
+
+.search-add-row .search-add-btn {
+  white-space: nowrap;
+  margin: 0;
+  align-self: center;
+}
+
+.change-list ul.object-tools {
+  display: none !important;
 }
