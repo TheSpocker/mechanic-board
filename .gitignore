@@ -7,3 +7,4 @@ db.sqlite3
 *.swp
 media/
 staticfiles/app/shopdb
+app/shopdb
