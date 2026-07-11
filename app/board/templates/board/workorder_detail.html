@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Work Order #{{ workorder.pk }}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #e7eaee;
+            font-family: Arial, sans-serif;
+            color: #111;
+        }
+
+        .toolbar {
+            width: min(1000px, calc(100% - 30px));
+            margin: 18px auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .toolbar a,
+        .toolbar button {
+            border: 0;
+            border-radius: 6px;
+            padding: 10px 16px;
+            background: #17395f;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .sheet {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto 30px;
+            padding: 12mm;
+            background: white;
+            box-shadow: 0 3px 18px rgba(0, 0, 0, 0.14);
+        }
+
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+            font-size: 24px;
+            margin: 8px 0 16px;
+        }
+
+        .check-times {
+            margin-bottom: 14px;
+            line-height: 1.8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #222;
+            padding: 7px;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        .details th {
+            width: 18%;
+            text-align: left;
+        }
+
+        .interventions {
+            margin-top: 12px;
+        }
+
+        .interventions td {
+            height: 30px;
+        }
+
+        .line-items {
+            margin-top: 14px;
+        }
+
+        .line-items td {
+            height: 31px;
+        }
+
+        .quantity {
+            width: 12%;
+            text-align: center;
+        }
+
+        .price {
+            width: 20%;
+            text-align: right;
+        }
+
+        .total {
+            margin-top: 22px;
+            display: flex;
+            justify-content: flex-end;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .total span {
+            min-width: 180px;
+            text-align: right;
+            border-bottom: 2px solid #111;
+        }
+
+        .notes {
+            margin-top: 18px;
+            min-height: 80px;
+            border: 1px solid #222;
+            padding: 10px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .toolbar {
+                display: none;
+            }
+
+            .sheet {
+                width: auto;
+                min-height: auto;
+                margin: 0;
+                padding: 8mm;
+                box-shadow: none;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="toolbar">
+
+    <a href="{% url 'board' %}">
+        Dashboard
+    </a>
+
+    <a href="{% url 'workorder-edit' workorder.pk %}">
+        Edit
+    </a>
+
+    <button type="button" onclick="window.print()">
+        Print / Save PDF
+    </button>
+
+</div>
+
+<main class="sheet">
+
+    <div class="check-times">
+
+        <strong>Check-In:</strong>
+        {{ workorder.check_in|date:"d/m/Y H:i"|default:"" }}
+
+        <br>
+
+        <strong>Check-Out:</strong>
+        {{ workorder.check_out|date:"d/m/Y H:i"|default:"" }}
+
+    </div>
+
+    <h1>ORDINE DI LAVORAZIONE</h1>
+
+    <table class="details">
+
+        <tr>
+            <th>Name</th>
+            <td>{{ workorder.customer }}</td>
+
+            <th>Phone</th>
+            <td>{{ workorder.customer_phone }}</td>
+        </tr>
+
+        <tr>
+            <th>Car</th>
+            <td>{{ workorder.vehicle }}</td>
+
+            <th>VIN</th>
+            <td>{{ workorder.vin }}</td>
+        </tr>
+
+        <tr>
+            <th>Plate</th>
+            <td>{{ workorder.plate }}</td>
+
+            <th>KM</th>
+            <td>{{ workorder.mileage|default:"" }}</td>
+        </tr>
+
+    </table>
+
+    <table class="interventions">
+
+        <thead>
+            <tr>
+                <th colspan="2">
+                    REQUEST FOR INTERVENTIONS
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>1) {{ workorder.intervention_1 }}</td>
+                <td>5) {{ workorder.intervention_5 }}</td>
+            </tr>
+
+            <tr>
+                <td>2) {{ workorder.intervention_2 }}</td>
+                <td>6) {{ workorder.intervention_6 }}</td>
+            </tr>
+
+            <tr>
+                <td>3) {{ workorder.intervention_3 }}</td>
+                <td>7) {{ workorder.intervention_7 }}</td>
+            </tr>
+
+            <tr>
+                <td>4) {{ workorder.intervention_4 }}</td>
+                <td>8) {{ workorder.intervention_8 }}</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+    <table class="line-items">
+
+        <thead>
+            <tr>
+                <th class="quantity">Q.TÀ</th>
+                <th>DESCRIPTION / DESCRIZIONE</th>
+                <th class="price">UNIT PRICE</th>
+                <th class="price">TOTAL</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for item in workorder.line_items.all %}
+
+                <tr>
+                    <td class="quantity">
+                        {{ item.quantity }}
+                    </td>
+
+                    <td>
+                        {{ item.description }}
+                    </td>
+
+                    <td class="price">
+                        €{{ item.unit_price|floatformat:2 }}
+                    </td>
+
+                    <td class="price">
+                        €{{ item.line_total|floatformat:2 }}
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            {% for unused_row in "123456789012345" %}
+
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% if workorder.notes %}
+
+        <div class="notes">
+
+            <strong>Notes:</strong>
+
+            <br>
+
+            {{ workorder.notes|linebreaksbr }}
+
+        </div>
+
+    {% endif %}
+
+    <div class="total">
+
+        TOTAL:&nbsp;
+
+        <span>
+            €{{ workorder.total|floatformat:2 }}
+        </span>
+
+    </div>
+
+</main>
+
+</body>
+</html>

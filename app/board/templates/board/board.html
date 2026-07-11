@@ -1,52 +1,254 @@
 {% load static %}
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="{% static 'board/style.css' %}">
   <meta charset="utf-8">
-  <title>Status Board</title>
-  <meta http-equiv="refresh" content="15">
-  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <title>Tyson Auto Garage — Status Board</title>
+
+  <link rel="stylesheet" href="{% static 'board/style.css' %}">
+
+  <meta http-equiv="refresh" content="15">
+
+  <style>
+    .dashboard-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .dashboard-button {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 7px;
+      background: #17395f;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .dashboard-button:hover {
+      background: #24527f;
+    }
+
+    .secondary-button {
+      background: #8b1e1e;
+    }
+
+    .secondary-button:hover {
+      background: #aa2a2a;
+    }
+
+    .admin-button {
+      background: #555f68;
+    }
+
+    .admin-button:hover {
+      background: #707b85;
+    }
+
+    .section-title {
+      margin-top: 30px;
+    }
+
+    .action-link {
+      color: #17395f;
+      font-weight: bold;
+      text-decoration: none;
+    }
   </style>
 </head>
+
 <body>
+
 <div class="header">
-  <img src="{% static 'board/img/logo.png' %}" alt="Tyson Auto Garage Logo" class="logo">
+  <img
+    src="{% static 'board/img/logo.png' %}"
+    alt="Tyson Auto Garage Logo"
+    class="logo"
+  >
+
   <h1>Tyson Auto Garage — Status Board</h1>
-  <div class="hint">Auto-refreshes every 15 seconds.</div>
+
+  <div class="hint">
+    Auto-refreshes every 15 seconds.
+  </div>
 </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Status</th>
-        <th>Vehicle</th>
-        <th>Plate</th>
-        <th>Customer</th>
-        <th>Complaint</th>
-        <th>Last Update</th>
-        <th>Promised Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for wo in workorders %}
-      <tr class="row">
-        <td class="status">{{ wo.get_status_display }}</td>
-        <td>{{ wo.vehicle }}</td>
-        <td>{{ wo.plate }}</td>
-        <td>{{ wo.customer }}</td>
-        <td>{{ wo.complaint }}</td>
-        <td>{{ wo.updated_at|date:"Y-m-d" }}</td>
-        <td>{{ wo.promised_date|date:"Y-m-d" }}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="7">No active work orders.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="dashboard-actions">
 
-</body>
-</html>
+  <a
+    href="{% url 'workorder-create' %}"
+    class="dashboard-button"
+  >
+    Create Work Order
+  </a>
+
+  <a
+    href="{% url 'rental-create' %}"
+    class="dashboard-button secondary-button"
+  >
+    Create Rental Contract
+  </a>
+
+  <a
+    href="/admin/"
+    class="dashboard-button admin-button"
+  >
+    Admin
+  </a>
+
+</div>
+
+<h2 class="section-title">Active Work Orders</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Vehicle</th>
+      <th>Plate</th>
+      <th>Customer</th>
+      <th>Complaint</th>
+      <th>Last Update</th>
+      <th>Promised Date</th>
+      <th>Open</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    {% for wo in workorders %}
+
+      <tr class="row">
+
+        <td class="status">
+          {{ wo.get_status_display }}
+        </td>
+
+        <td>
+          {{ wo.vehicle }}
+        </td>
+
+        <td>
+          {{ wo.plate }}
+        </td>
+
+        <td>
+          {{ wo.customer }}
+        </td>
+
+        <td>
+          {{ wo.complaint }}
+        </td>
+
+        <td>
+          {{ wo.updated_at|date:"Y-m-d H:i" }}
+        </td>
+
+        <td>
+          {{ wo.promised_date|date:"Y-m-d"|default:"—" }}
+        </td>
+
+        <td>
+          <a
+            href="{% url 'workorder-detail-page' wo.pk %}"
+            class="action-link"
+          >
+            View
+          </a>
+        </td>
+
+      </tr>
+
+    {% empty %}
+
+      <tr>
+        <td colspan="8">
+          No active work orders.
+        </td>
+      </tr>
+
+    {% endfor %}
+
+  </tbody>
+</table>
+
+<h2 class="section-title">Recent Rental Contracts</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Vehicle</th>
+      <th>Plate</th>
+      <th>Customer</th>
+      <th>Language</th>
+      <th>Start Date</th>
+      <th>Due Date</th>
+      <th>Open</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    {% for rental in rentals %}
+
+      <tr class="row">
+
+        <td>
+          {{ rental.get_status_display }}
+        </td>
+
+        <td>
+          {{ rental.rental_car.vehicle }}
+        </td>
+
+        <td>
+          {{ rental.rental_car.plate }}
+        </td>
+
+        <td>
+          {{ rental.renter_name }}
+        </td>
+
+        <td>
+          {{ rental.get_language_display }}
+        </td>
+
+        <td>
+          {{ rental.start_date|date:"Y-m-d" }}
+        </td>
+
+        <td>
+          {{ rental.due_date|date:"Y-m-d" }}
+        </td>
+
+        <td>
+          <a
+            href="{% url 'rental-detail' rental.pk %}"
+            class="action-link"
+          >
+            View
+          </a>
+        </td>
+
+      </tr>
+
+    {% empty %}
+
+      <tr>
+        <td colspan="8">
+          No rental contracts yet.
+        </td>
+      </tr>
+
+    {% endfor %}
+
+  </tbody>
+</table>
+
 </body>
 </html>

@@ -20,6 +20,24 @@ class WorkOrder(models.Model):
     customer = models.CharField(max_length=100, blank=True)
     complaint = models.CharField(max_length=255, blank=True)
 
+    customer_phone = models.CharField(max_length=30, blank=True)
+    vin = models.CharField(max_length=17, blank=True)
+    mileage = models.PositiveIntegerField(null=True, blank=True)
+
+    check_in = models.DateTimeField(null=True, blank=True)
+    check_out = models.DateTimeField(null=True, blank=True)
+
+    intervention_1 = models.CharField(max_length=255, blank=True)
+    intervention_2 = models.CharField(max_length=255, blank=True)
+    intervention_3 = models.CharField(max_length=255, blank=True)
+    intervention_4 = models.CharField(max_length=255, blank=True)
+    intervention_5 = models.CharField(max_length=255, blank=True)
+    intervention_6 = models.CharField(max_length=255, blank=True)
+    intervention_7 = models.CharField(max_length=255, blank=True)
+    intervention_8 = models.CharField(max_length=255, blank=True)
+
+    notes = models.TextField(blank=True)
+
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
@@ -31,8 +49,57 @@ class WorkOrder(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def subtotal(self):
+        return sum(
+            (item.line_total for item in self.line_items.all()),
+            start=0,
+        )
+
+    @property
+    def total(self):
+        return self.subtotal
+
     def __str__(self):
         return f"{self.vehicle} ({self.plate}) - {self.status}"
+
+
+class WorkOrderLineItem(models.Model):
+    work_order = models.ForeignKey(
+        WorkOrder,
+        on_delete=models.CASCADE,
+        related_name="line_items",
+    )
+
+    quantity = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default=1,
+    )
+
+    description = models.CharField(
+        max_length=255,
+    )
+
+    unit_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+    )
+
+    position = models.PositiveIntegerField(
+        default=0,
+    )
+
+    class Meta:
+        ordering = ["position", "id"]
+
+    @property
+    def line_total(self):
+        return self.quantity * self.unit_price
+
+    def __str__(self):
+        return f"{self.quantity} x {self.description}"
 
 
 class RentalCar(models.Model):
@@ -44,9 +111,13 @@ class RentalCar(models.Model):
         ("OUT", "Out of Service"),
     ]
 
-    vehicle = models.CharField(max_length=100)     # e.g. "2016 Fiat Panda"
+    vehicle = models.CharField(max_length=100)
     plate = models.CharField(max_length=20, unique=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="AVAILABLE")
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="AVAILABLE",
+    )
 
     notes = models.CharField(max_length=255, blank=True)
 
@@ -65,24 +136,51 @@ class RentalAgreement(models.Model):
         ("LATE", "Late"),
     ]
 
-    rental_car = models.ForeignKey(RentalCar, on_delete=models.PROTECT, related_name="rentals")
+    LANGUAGE_CHOICES = [
+        ("EN", "English"),
+        ("IT", "Italian"),
+    ]
+
+    rental_car = models.ForeignKey(
+        RentalCar,
+        on_delete=models.PROTECT,
+        related_name="rentals",
+    )
 
     renter_name = models.CharField(max_length=100)
     renter_phone = models.CharField(max_length=30, blank=True)
+
+    language = models.CharField(
+        max_length=2,
+        choices=LANGUAGE_CHOICES,
+        default="IT",
+    )
+
+    fuel_type = models.CharField(max_length=50, blank=True)
 
     start_date = models.DateField()
     due_date = models.DateField()
     return_date = models.DateField(null=True, blank=True)
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="OPEN")
+    start_time = models.TimeField(null=True, blank=True)
+    return_time = models.TimeField(null=True, blank=True)
 
-    notes = models.CharField(max_length=255, blank=True)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="OPEN",
+    )
+
+    notes = models.TextField(blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.rental_car.plate} - {self.renter_name} ({self.status})"
+        return (
+            f"{self.rental_car.plate} - "
+            f"{self.renter_name} ({self.status})"
+        )
 
 
 class RentalIssue(models.Model):
@@ -99,20 +197,43 @@ class RentalIssue(models.Model):
         ("HIGH", "High"),
     ]
 
-    rental_car = models.ForeignKey(RentalCar, on_delete=models.CASCADE, related_name="issues")
-    rental_agreement = models.ForeignKey(RentalAgreement, null=True, blank=True, on_delete=models.SET_NULL, related_name="issues")
+    rental_car = models.ForeignKey(
+        RentalCar,
+        on_delete=models.CASCADE,
+        related_name="issues",
+    )
+
+    rental_agreement = models.ForeignKey(
+        RentalAgreement,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="issues",
+    )
 
     title = models.CharField(max_length=120)
     description = models.CharField(max_length=255, blank=True)
 
-    severity = models.CharField(max_length=10, choices=SEVERITY_CHOICES, default="MED")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="OPEN")
+    severity = models.CharField(
+        max_length=10,
+        choices=SEVERITY_CHOICES,
+        default="MED",
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="OPEN",
+    )
 
     reported_date = models.DateField(null=True, blank=True)
     resolved_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.rental_car.plate} - {self.title} ({self.status})"
+        return (
+            f"{self.rental_car.plate} - "
+            f"{self.title} ({self.status})"
+        )
 
 
 class CarForSale(models.Model):
@@ -135,7 +256,11 @@ class CarForSale(models.Model):
     plate = models.CharField(max_length=20, blank=True)
     vin = models.CharField(max_length=17, blank=True)
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="AVAILABLE")
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="AVAILABLE",
+    )
 
     known_issues = models.CharField(max_length=255, blank=True)
     notes = models.CharField(max_length=255, blank=True)
@@ -147,8 +272,22 @@ class CarForSale(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        title = " ".join(x for x in [str(self.year or ""), self.make, self.model, self.trim] if x).strip()
-        return f"{title or 'Car'} - €{self.price} - {self.mileage} mi"
+        title = " ".join(
+            value
+            for value in [
+                str(self.year or ""),
+                self.make,
+                self.model,
+                self.trim,
+            ]
+            if value
+        ).strip()
+
+        return (
+            f"{title or 'Car'} - "
+            f"€{self.price} - "
+            f"{self.mileage} mi"
+        )
 
 
 class CarForSaleIssue(models.Model):
@@ -164,13 +303,26 @@ class CarForSaleIssue(models.Model):
         ("HIGH", "High"),
     ]
 
-    car = models.ForeignKey(CarForSale, on_delete=models.CASCADE, related_name="issues")
+    car = models.ForeignKey(
+        CarForSale,
+        on_delete=models.CASCADE,
+        related_name="issues",
+    )
 
     title = models.CharField(max_length=120)
     description = models.CharField(max_length=255, blank=True)
 
-    severity = models.CharField(max_length=10, choices=SEVERITY_CHOICES, default="MED")
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="OPEN")
+    severity = models.CharField(
+        max_length=10,
+        choices=SEVERITY_CHOICES,
+        default="MED",
+    )
+
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default="OPEN",
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 

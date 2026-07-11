@@ -1,0 +1,305 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+    <title>
+        {% if workorder.pk %}
+            Edit Work Order
+        {% else %}
+            New Work Order
+        {% endif %}
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #eef1f4;
+            color: #1d2329;
+            font-family: Arial, sans-serif;
+        }
+
+        .page {
+            width: min(1180px, calc(100% - 32px));
+            margin: 24px auto;
+        }
+
+        .toolbar {
+            margin-bottom: 18px;
+        }
+
+        .toolbar a {
+            color: #17395f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        h2 {
+            margin-top: 32px;
+            border-bottom: 2px solid #222;
+            padding-bottom: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid #aeb6bf;
+            border-radius: 6px;
+            padding: 10px;
+            font: inherit;
+        }
+
+        .interventions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #bbc1c7;
+            padding: 8px;
+        }
+
+        th {
+            background: #e9edf1;
+            text-align: left;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        button,
+        .cancel-button {
+            border: 0;
+            border-radius: 7px;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        button {
+            background: #17395f;
+            cursor: pointer;
+        }
+
+        .cancel-button {
+            background: #6b737c;
+        }
+
+        .errorlist {
+            color: #a00000;
+        }
+
+        @media (max-width: 760px) {
+            .grid,
+            .interventions {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="toolbar">
+        <a href="{% url 'board' %}">← Dashboard</a>
+    </div>
+
+    <form method="post" class="card">
+        {% csrf_token %}
+
+        <h1>
+            {% if workorder.pk %}
+                Edit Work Order #{{ workorder.pk }}
+            {% else %}
+                New Work Order
+            {% endif %}
+        </h1>
+
+        {{ form.non_field_errors }}
+
+        <h2>Customer and Vehicle</h2>
+
+        <div class="grid">
+            <div>
+                {{ form.customer.label_tag }}
+                {{ form.customer.errors }}
+                {{ form.customer }}
+            </div>
+
+            <div>
+                {{ form.customer_phone.label_tag }}
+                {{ form.customer_phone.errors }}
+                {{ form.customer_phone }}
+            </div>
+
+            <div>
+                {{ form.vehicle.label_tag }}
+                {{ form.vehicle.errors }}
+                {{ form.vehicle }}
+            </div>
+
+            <div>
+                {{ form.plate.label_tag }}
+                {{ form.plate.errors }}
+                {{ form.plate }}
+            </div>
+
+            <div>
+                {{ form.vin.label_tag }}
+                {{ form.vin.errors }}
+                {{ form.vin }}
+            </div>
+
+            <div>
+                {{ form.mileage.label_tag }}
+                {{ form.mileage.errors }}
+                {{ form.mileage }}
+            </div>
+
+            <div>
+                {{ form.check_in.label_tag }}
+                {{ form.check_in.errors }}
+                {{ form.check_in }}
+            </div>
+
+            <div>
+                {{ form.check_out.label_tag }}
+                {{ form.check_out.errors }}
+                {{ form.check_out }}
+            </div>
+
+            <div>
+                {{ form.status.label_tag }}
+                {{ form.status.errors }}
+                {{ form.status }}
+            </div>
+
+            <div>
+                {{ form.promised_date.label_tag }}
+                {{ form.promised_date.errors }}
+                {{ form.promised_date }}
+            </div>
+
+            <div class="full-width">
+                {{ form.complaint.label_tag }}
+                {{ form.complaint.errors }}
+                {{ form.complaint }}
+            </div>
+        </div>
+
+        <h2>Requested Interventions</h2>
+
+        <div class="interventions">
+            <div>{{ form.intervention_1 }}</div>
+            <div>{{ form.intervention_2 }}</div>
+            <div>{{ form.intervention_3 }}</div>
+            <div>{{ form.intervention_4 }}</div>
+            <div>{{ form.intervention_5 }}</div>
+            <div>{{ form.intervention_6 }}</div>
+            <div>{{ form.intervention_7 }}</div>
+            <div>{{ form.intervention_8 }}</div>
+        </div>
+
+        <h2>Parts and Labor</h2>
+
+        {{ formset.management_form }}
+        {{ formset.non_form_errors }}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Quantity</th>
+                    <th>Description</th>
+                    <th>Unit price</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line_form in formset %}
+                    <tr>
+                        <td>
+                            {{ line_form.id }}
+                            {{ line_form.quantity }}
+                            {{ line_form.position.as_hidden }}
+                        </td>
+                        <td>{{ line_form.description }}</td>
+                        <td>{{ line_form.unit_price }}</td>
+                        <td>
+                            {% if line_form.instance.pk %}
+                                {{ line_form.DELETE }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Notes</h2>
+
+        {{ form.notes.errors }}
+        {{ form.notes }}
+
+        <div class="actions">
+            <a href="{% url 'board' %}" class="cancel-button">
+                Cancel
+            </a>
+
+            <button type="submit">
+                Save Work Order
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

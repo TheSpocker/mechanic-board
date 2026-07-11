@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rental Contract #{{ rental.pk }}</title>
+
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; background: #e7eaee; font-family: Arial, sans-serif; color: #111; }
+.toolbar { width: min(900px, calc(100% - 30px)); margin: 18px auto; display: flex; gap: 10px; }
+.toolbar a, .toolbar button { border: 0; border-radius: 6px; padding: 10px 16px; background: #17395f; color: white; text-decoration: none; font-weight: bold; cursor: pointer; }
+.sheet { width: 210mm; min-height: 297mm; margin: 0 auto 30px; padding: 12mm; background: white; box-shadow: 0 3px 18px rgba(0,0,0,.14); }
+h1 { text-align: center; font-size: 23px; margin: 8px 0 18px; }
+h2 { font-size: 15px; margin: 18px 0 8px; border-bottom: 1px solid #222; padding-bottom: 4px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #222; padding: 7px; text-align: left; }
+ol { padding-left: 22px; }
+li { margin-bottom: 7px; }
+.signature { margin-top: 28px; }
+.footer { margin-top: 28px; font-size: 12px; line-height: 1.5; }
+@media print {
+    body { background: white; }
+    .toolbar { display: none; }
+    .sheet { width: auto; min-height: auto; margin: 0; padding: 8mm; box-shadow: none; }
+    @page { size: A4; margin: 0; }
+}
+</style>
+
+</head>
+<body>
+<div class="toolbar">
+<a href="{% url 'board' %}">Dashboard</a>
+<a href="{% url 'rental-edit' rental.pk %}">Edit</a>
+<button onclick="window.print()">Print / Save PDF</button>
+</div>
+<main class="sheet">
+<h1>VEHICLE RENTAL AGREEMENT</h1>
+<p>On the date <strong>{{ rental.start_date|date:"d/m/Y" }}</strong> at <strong>{{ rental.start_time|time:"H:i"|default:"" }}</strong>, the customer declares to have taken delivery of and accepted the vehicle described below.</p>
+
+<h2>VEHICLE DETAILS</h2>
+<table>
+<tr><th>Make / Model</th><td>{{ rental.rental_car.vehicle }}</td></tr>
+<tr><th>License Plate</th><td>{{ rental.rental_car.plate }}</td></tr>
+<tr><th>Fuel Type</th><td>{{ rental.fuel_type }}</td></tr>
+</table>
+
+<h2>CUSTOMER DETAILS</h2>
+<table>
+<tr><th>Name</th><td>{{ rental.renter_name }}</td></tr>
+<tr><th>Telephone</th><td>{{ rental.renter_phone }}</td></tr>
+</table>
+
+<h2>GENERAL RENTAL CONDITIONS</h2>
+<ol>
+<li>The customer is responsible for any damage to the vehicle bodywork and/or damage resulting from accidents.</li>
+<li>The customer is responsible for repairs necessary to restore the vehicle to optimal working condition.</li>
+<li>The customer is responsible for towing expenses carried out by services not affiliated with TYSON AUTO SRLS.</li>
+<li>The customer is responsible for fuel consumed during the rental period.</li>
+<li>In case of breakdown or need for repairs, the customer must promptly contact TYSON AUTO SRLS.</li>
+<li>Repairs must be carried out exclusively at authorized service centers.</li>
+<li>The use of external workshops without prior authorization is strictly prohibited.</li>
+<li>The vehicle may only be driven by the customer identified in the attached documents.</li>
+<li>If the vehicle is not returned to the agreed location, recovery and transport expenses will be charged to the customer.</li>
+<li>Loss of vehicle documentation carries a flat compensation fee of €300.</li>
+<li>The customer is fully responsible for fines, penalties, or administrative sanctions arising from use of the vehicle.</li>
+<li>The customer authorizes TYSON AUTO SRLS to charge unpaid amounts to the payment card used for this agreement.</li>
+<li>The rental fee is payable upon return of the vehicle and calculated when the contract is closed.</li>
+</ol>
+
+<h2>PRIVACY AND CONSENT</h2>
+<p>The customer confirms receipt of the applicable privacy information and consents to the processing of personal data in accordance with applicable law.</p>
+
+<p class="signature"><strong>Customer signature:</strong> ________________________________</p>
+
+<h2>VEHICLE RETURN</h2>
+<p>Returned on <strong>{{ rental.return_date|date:"d/m/Y"|default:"" }}</strong> at <strong>{{ rental.return_time|time:"H:i"|default:"" }}</strong>.</p>
+
+{% if rental.notes %}<p><strong>Notes:</strong><br>{{ rental.notes|linebreaksbr }}</p>{% endif %}
+
+<div class="footer">
+<strong>TYSON AUTO SRLS</strong><br>
+Via Giuseppe Ellero 17, 33081 Aviano (PN), Italy<br>
+Phone: +39 351 659 2435 / +39 392 209 5244<br>
+Email: tysonautoaviano@gmail.com<br>
+24H Roadside Assistance: +39 335 121 0172
+</div>
+</main>
+</body>
+</html>
